@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  notifications:
+  new_application:
+    message: "You have a new application"

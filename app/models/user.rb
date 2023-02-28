@@ -10,6 +10,7 @@ class User < ApplicationRecord
 
   has_many :jobs, dependent: :delete_all
   has_many :reviews, dependent: :delete_all
+  has_many :notifications, as: :recipient, dependent: :destroy
 =begin
   class Blocked < StandardError
   end
@@ -29,5 +30,8 @@ class User < ApplicationRecord
   validates :user_type, presence: false
   validates :image_url, presence: false
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 
 end

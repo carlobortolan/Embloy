@@ -15,7 +15,7 @@ class RegistrationsController < ApplicationController
     findCoordinates
 
     if @user.save
-      # WelcomeMailer.with(user: @user).welcome_email.deliver_now
+      WelcomeMailer.with(user: @user).welcome_email.deliver_later
       session[:user_id] = @user.id
       redirect_to root_path, notice: 'Successfully created account'
     else

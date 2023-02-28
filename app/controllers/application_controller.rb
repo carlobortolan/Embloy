@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :set_current_user
-
+  before_action :set_notifications, if: Current.user
 
   def set_current_user
     Current.user = User.find_by(id: session[:user_id]) if session[:user_id]
@@ -51,6 +51,14 @@ class ApplicationController < ActionController::Base
 
   def routing_error(exception)
     render(:file => File.join(Rails.root, 'public/404.html'), :status => 404, :layout => false)
+  end
+
+  private
+
+  def set_notifications
+    notifications = Notification.includes(:recipient).where(recipient: Current.user).newest_first.limit(9)
+    @unread = notifications.unread
+    @read = notifications.read
   end
 
 end

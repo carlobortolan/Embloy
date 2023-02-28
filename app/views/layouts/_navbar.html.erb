@@ -31,6 +31,9 @@
         </li>
         <li><%= link_to "Contact", help_path %></li>
 
+        <li>
+          <%= render 'layouts/notifications' %>
+        </li>
 
         <% if Current.user %>
           <li><%= link_to "My Profile", profile_index_path, class: 'get-a-quote' %></li>

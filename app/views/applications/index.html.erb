@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag "style" %>
 <h1>Applications for job #<%= @job.job_id %></h1>
 <h3>There are <%= @job.applications.count %> applications and counting!</h3>
 <%=
@@ -9,16 +8,16 @@
 
 <ul>
   <% @applications.each do |application| %>
-    <% application.get_name.to_s %>
+    <% application.user.full_name %>
     <li>
       <%=
-        link_to "#{application.get_name} (##{application.applicant_id})", job_application_path(@job.job_id, application.applicant_id)
+        link_to "#{application.user.full_name}", job_application_path(@job.job_id, application.user_id)
       %> -
       <%=
-        link_to "accept", job_application_accept_path(@job, application.applicant_id)
+        link_to "accept", job_application_accept_path(@job, application.user_id)
       %> -
       <%=
-        link_to "reject", job_application_reject_path(@job, application.applicant_id)
+        link_to "reject", job_application_reject_path(@job, application.user_id)
       %>
     </li>
   <% end %>

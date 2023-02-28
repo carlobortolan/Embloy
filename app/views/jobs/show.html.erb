@@ -7,8 +7,8 @@
 <%= button_to "Delete this job", job_path(@job), form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete %>
 
 
-<h2>Applications</h2>
-<%= render @job.applications %>
+<!--<h2>Applications</h2>-->
+<%#= render @job.applications %>
 
 <h2>Add an application:</h2>
 <%= render 'applications/form' %>

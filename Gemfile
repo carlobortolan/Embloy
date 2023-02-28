@@ -50,7 +50,7 @@ gem "bootsnap", require: false
 gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'main'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -79,3 +79,11 @@ gem "omniauth-twitter", "~> 1.4"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth-google-oauth2", "~> 1.1"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
+
+gem "noticed", "~> 1.6"
+
+gem "bullet", "~> 7.0"
+
+gem "benchmark", "~> 0.2.1"
+
+gem "activerecord-import", "~> 1.4"

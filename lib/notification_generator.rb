@@ -15,7 +15,7 @@ class NotificationGenerator
   # @param [String] content Bewerbungsschreiben
   # @param [String] documents Link zu den Bewerbungsunterlagen
   # @return [void]
-  def send_notification_employer(employer_name, employer_email, applicant_name, applicant_email, applicant_id, job_id, applied_at, content = "", documents = "")
+  def send_notification_employer(employer_name, employer_email, applicant_name, applicant_email, user_id, job_id, applied_at, content = "", documents = "")
     puts "sending email to #{employer_email}, #{applicant_name}, #{job_id}"
     msg = <<MESSAGE_END
 From: Support V&I <noreply.versuchundirrtum@gmail.com>
@@ -939,7 +939,7 @@ mily: Arial;font-size: 16px;padding: 18px;mso-line-height-rule: exactly;-ms=
 -text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign=3D"middle" =
 align=3D"center">
                                 <a class=3D"mcnButton " title=3D"Accept" hr=
-ef=3D"https://www.versuchundirrtum.com/acceptapplication/@id={#{job_id},#{applicant_id}}" target=3D"_blank" style=3D=
+ef=3D"https://www.versuchundirrtum.com/acceptapplication/@id={#{job_id},#{user_id}}" target=3D"_blank" style=3D=
 "font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: cen=
 ter;text-decoration: none;color: #FFFFFF;mso-line-height-rule: exactly;-ms-=
 text-size-adjust: 100%;-webkit-text-size-adjust: 100%;display: block;">Acce=
@@ -992,7 +992,7 @@ mily: Arial;font-size: 16px;padding: 18px;mso-line-height-rule: exactly;-ms=
 -text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign=3D"middle" =
 align=3D"center">
                                 <a class=3D"mcnButton " title=3D"View detai=
-ls" href=3D"https://www.versuchundirrtum.com/viewapplication/@id={#{job_id},#{applicant_id}}" target=3D"_blank" style=
+ls" href=3D"https://www.versuchundirrtum.com/viewapplication/@id={#{job_id},#{user_id}}" target=3D"_blank" style=
 =3D"font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: =
 center;text-decoration: none;color: #FFFFFF;mso-line-height-rule: exactly;-=
 ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;display: block;">V=
@@ -1045,7 +1045,7 @@ mily: Arial;font-size: 16px;padding: 18px;mso-line-height-rule: exactly;-ms=
 -text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign=3D"middle" =
 align=3D"center">
                                 <a class=3D"mcnButton " title=3D"Reject" hr=
-ef=3D"https://www.versuchundirrtum.com/rejectapplication/@id={#{job_id},#{applicant_id}}" target=3D"_blank" style=3D=
+ef=3D"https://www.versuchundirrtum.com/rejectapplication/@id={#{job_id},#{user_id}}" target=3D"_blank" style=3D=
 "font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: cen=
 ter;text-decoration: none;color: #FFFFFF;mso-line-height-rule: exactly;-ms-=
 text-size-adjust: 100%;-webkit-text-size-adjust: 100%;display: block;">Reje=

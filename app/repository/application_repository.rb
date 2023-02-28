@@ -49,7 +49,7 @@ class ApplicationRepository
 
   def create_application (job_id, id, text, documents)
     # create new application as Application: {(job_id, id), text, status, response}
-    ApplicationRecord.connection.query("INSERT INTO applications(job_id, applicant_id, application_text, application_documents, updated_at) VALUES (#{job_id}, #{id}, '#{text}', '#{documents}', '#{Time.now}')")
+    @application = ApplicationRecord.connection.query("INSERT INTO applications(job_id, user_id, application_text, application_documents, updated_at, applied_at) VALUES (#{job_id}, #{id}, '#{text}', '#{documents}', '#{Time.now}', '#{Time.now}')")
     # query = "INSERT INTO applications(job_id, applicant_id, application_text, application_documents) VALUES (#{job_id}, #{id}, '#{text}', '#{documents}')"
     # binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
     #          ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new),
@@ -61,7 +61,7 @@ class ApplicationRepository
   def change_status (job_id, id, new_status, response)
     # change status to -1/0/1;
     # add response
-    query = "UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND applicant_id = #{id }"
+    query = "UPDATE applications SET status = '#{new_status}', response = '#{response}' WHERE job_id = #{job_id} AND user_id = #{id }"
     binds = [ActiveRecord::Relation::QueryAttribute.new('job_id', job_id, ActiveRecord::Type::Integer.new),
              ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new),
              ActiveRecord::Relation::QueryAttribute.new('new_status', new_status, ActiveRecord::Type::String.new),
@@ -81,7 +81,7 @@ class ApplicationRepository
   end
 
   def find_by_user(id)
-    query = "SELECT * FROM applications WHERE applicant_id = #{id} ORDER BY applied_at DESC"
+    query = "SELECT * FROM applications WHERE user_id = #{id} ORDER BY applied_at DESC"
     binds = [ActiveRecord::Relation::QueryAttribute.new('id', id, ActiveRecord::Type::Integer.new)]
     ApplicationRecord.connection.exec_query(query, 'SQL', binds, prepare: true).rows
   end

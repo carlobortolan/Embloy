@@ -39,7 +39,7 @@ class UserController < ApplicationController
     if require_user_logged_in!
       # @applications = Application.find_by_applicant_id(Current.user.id)
       # @applications = @application_service.find_by_user(Current.user.id).as_json
-      @applications = Application.all.where("applicant_id = #{Current.user.id}")
+      @applications = Application.includes(:user).all.where("user_id = #{Current.user.id}")
     end
   end
 

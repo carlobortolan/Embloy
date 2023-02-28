@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_28_021741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,17 +22,56 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   create_enum "rating_type", ["1", "2", "3", "4", "5"]
   create_enum "user_type", ["company", "private"]
 
-  create_table "applications", primary_key: ["job_id", "applicant_id"], force: :cascade do |t|
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "applications", primary_key: ["job_id", "user_id"], force: :cascade do |t|
     t.integer "job_id", null: false
-    t.integer "applicant_id", null: false
-    t.datetime "updated_at", default: "2023-02-25 15:03:03", null: false
+    t.integer "user_id", null: false
+    t.datetime "updated_at", default: "2023-02-27 23:06:10", null: false
+    t.datetime "applied_at", default: "2023-02-27 23:06:10", null: false
     t.enum "status", default: "0", null: false, enum_type: "application_status"
     t.string "application_text", limit: 1000
     t.string "application_documents", limit: 100
     t.string "response", limit: 500
-    t.datetime "applied_at", precision: nil, null: false
-    t.index ["applicant_id"], name: "account_id_idx"
-    t.index ["job_id", "applicant_id"], name: "index_applications_on_job_id_and_applicant_id", unique: true
+    t.index ["job_id", "user_id"], name: "application_job_id_user_id_index", unique: true
+    t.index ["job_id"], name: "application_job_id_index"
+    t.index ["user_id"], name: "application_user_id_index"
   end
 
   create_table "auth_blacklists", force: :cascade do |t|
@@ -50,8 +89,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
   end
 
   create_table "currents", force: :cascade do |t|
-    t.datetime "created_at", default: "2023-02-25 15:03:04", null: false
-    t.datetime "updated_at", default: "2023-02-25 15:03:04", null: false
+    t.datetime "created_at", default: "2023-02-27 23:06:11", null: false
+    t.datetime "updated_at", default: "2023-02-27 23:06:11", null: false
+  end
+
+  create_table "job_notifications", primary_key: ["employer_id", "job_id"], force: :cascade do |t|
+    t.integer "employer_id", null: false
+    t.integer "job_id", null: false
+    t.enum "notify", default: "0", null: false, enum_type: "notify_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "notification_job_id_index"
   end
 
   create_table "jobs", primary_key: "job_id", id: :serial, force: :cascade do |t|
@@ -78,16 +126,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
     t.integer "view_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "job_information_account_id_idx"
+    t.integer "application_count"
+    t.index ["country_code"], name: " job_country_code_index "
+    t.index ["job_id"], name: "job_job_id_index"
+    t.index ["postal_code"], name: " job_postal_code_index "
+    t.index ["user_id"], name: "job_user_id_index "
   end
 
-  create_table "notifications", primary_key: ["employer_id", "job_id"], force: :cascade do |t|
-    t.integer "employer_id", null: false
-    t.integer "job_id", null: false
-    t.enum "notify", default: "0", null: false, enum_type: "notify_type"
+  create_table "notifications", force: :cascade do |t|
+    t.string "recipient_type", null: false
+    t.bigint "recipient_id", null: false
+    t.string "type", null: false
+    t.jsonb "params"
+    t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["job_id"], name: "notification_job_id_idx"
+    t.index ["read_at"], name: "index_notifications_on_read_at"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "private_users", id: :serial, force: :cascade do |t|
@@ -102,7 +157,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
     t.integer "created_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["created_by"], name: "fk_rails_50d2809d9b"
+    t.index ["created_by"], name: "reviews_created_by_index"
   end
 
   create_table "user_blacklists", force: :cascade do |t|
@@ -128,18 +183,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_113311) do
     t.string "address", limit: 45
     t.datetime "date_of_birth"
     t.enum "user_type", default: "private", null: false, enum_type: "user_type"
+    t.integer "view_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "view_count", default: 0, null: false
-    t.index ["email"], name: "account_email_UNIQUE", unique: true
+    t.integer "application_count"
+    t.integer "job_count"
+    t.index ["email"], name: "user_email_index", unique: true
+    t.index ["first_name", "last_name"], name: "user_name_index"
+    t.index ["user_type"], name: "user_user_type_index"
   end
 
-  add_foreign_key "applications", "jobs", primary_key: "job_id"
-  add_foreign_key "applications", "users", column: "applicant_id"
-  add_foreign_key "company_users", "users", column: "id"
-  add_foreign_key "jobs", "users"
-  add_foreign_key "notifications", "jobs", primary_key: "job_id"
-  add_foreign_key "notifications", "users", column: "employer_id"
-  add_foreign_key "private_users", "users", column: "id"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "applications", "jobs", primary_key: "job_id", on_delete: :cascade
+  add_foreign_key "applications", "users", on_delete: :cascade
+  add_foreign_key "company_users", "users", column: "id", on_delete: :cascade
+  add_foreign_key "job_notifications", "jobs", primary_key: "job_id", on_delete: :cascade
+  add_foreign_key "job_notifications", "users", column: "employer_id", on_delete: :cascade
+  add_foreign_key "jobs", "users", on_delete: :cascade
+  add_foreign_key "private_users", "users", column: "id", on_delete: :cascade
   add_foreign_key "reviews", "users", column: "created_by"
 end
